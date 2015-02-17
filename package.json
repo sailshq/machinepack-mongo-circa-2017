@@ -1,0 +1,26 @@
+{
+  "name": "machinepack-mongodb",
+  "version": "0.1.0",
+  "description": "Structured Node.js bindings for MongoDB.",
+  "scripts": {
+    "test": "node ./node_modules/test-machinepack-mocha/bin/testmachinepack-mocha.js"
+  },
+  "keywords": [
+    "MongoDB",
+    "machines",
+    "machinepack"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies":{
+    "machine": "^3.0.0"
+  },
+  "devDependencies": {
+    "test-machinepack-mocha": "^0.2.2"
+  },
+  "machinepack": {
+    "friendlyName": "MongoDB",
+    "machineDir": "machines/",
+    "machines": []
+  }
+}
