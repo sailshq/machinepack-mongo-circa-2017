@@ -130,14 +130,21 @@ module.exports = {
       // TODO: hit mongo  instead of setTimetoue
       setTimeout(function (){
 
-        // TODO: if thisWriteResult.hasWriteConcernError(), then negotiate it and call the appropriate exit
-        // e.g.
-        // {
-        //   "code" : 64,
-        //   "errmsg" : "waiting for replication timed out at shard-a"
-        // }
-        //
-        // (usually a good idea to just hit `error` to start with, then add other exits as needed)
+        // TODO: if thisWriteResult.hasWriteConcernError()...
+        if (false) {
+
+          // Close the db connection
+          db.close();
+
+          // ...then negotiate it and call the appropriate exit
+          // e.g.
+          // {
+          //   "code" : 64,
+          //   "errmsg" : "waiting for replication timed out at shard-a"
+          // }
+          // (usually a good idea to just hit `error` to start with, then add other exits as needed)
+          return exits.error(new Error('not implemented yet'));
+        }
 
 
         // Close the db connection
