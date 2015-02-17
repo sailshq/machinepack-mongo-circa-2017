@@ -22,6 +22,12 @@ module.exports = {
       example: 'mongodb://localhost:27017/machinepack-mongodb-default'
     },
 
+    collection: {
+      description: 'The name of the collection whose documents will be updated.',
+      example: 'direwolves',
+      required: true
+    },
+
     query: {
       description: 'The selection criteria for the update.',
       extendedDescription: 'Uses the same query selectors as in the find() method.',
