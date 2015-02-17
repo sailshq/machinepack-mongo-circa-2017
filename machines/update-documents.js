@@ -15,6 +15,13 @@ module.exports = {
 
   inputs: {
 
+    connectionUrl: {
+      description: 'The mongoDB connection URL',
+      moreInfoUrl: 'http://docs.mongodb.org/manual/reference/connection-string/',
+      defaultsTo: 'mongodb://localhost:27017/machinepack-mongodb-default',
+      example: 'mongodb://localhost:27017/machinepack-mongodb-default'
+    },
+
     query: {
       description: 'The selection criteria for the update.',
       extendedDescription: 'Uses the same query selectors as in the find() method.',
@@ -51,6 +58,8 @@ module.exports = {
       typeclass: 'dictionary'
     },
 
+
+
   },
 
 
@@ -73,6 +82,11 @@ module.exports = {
       moreInfoUrl: 'http://docs.mongodb.org/manual/reference/method/db.collection.update/#update-parameter'
     },
 
+    couldNotConnect: {
+      description: 'Could not connect to MongoDB server at specified `connectionUrl`.',
+      extendedDescription: 'Make sure the credentials are correct and that the server is running (i.e. to run mongo locally, do `mongod`)'
+    },
+
     success: {
       description: 'Done.',
       moreInfoUrl: 'http://docs.mongodb.org/manual/reference/method/db.collection.update/#writeresults-update',
@@ -89,7 +103,7 @@ module.exports = {
   fn: function(inputs, exits) {
 
     // Bring in a mongo driver
-    var mongo = require('mongodb');
+    var MongoClient = require('mongodb').MongoClient;
 
     var validQuery = (function isQueryValid (query){
       // TODO: validate query -- all we know is that it will be a dictionary (plain ole js object)
@@ -99,19 +113,45 @@ module.exports = {
       return exits.invalidQuery();
     }
 
-    // TODO: hit mongo (every call brings up a new connection for now)
 
-    // TODO: if thisWriteResult.hasWriteConcernError(), then negotiate it and call the appropriate exit
-    // e.g.
-    // {
-    //   "code" : 64,
-    //   "errmsg" : "waiting for replication timed out at shard-a"
-    // }
-    //
-    // (usually a good idea to just hit `error` to start with, then add other exits as needed)
+    // Connection URL
+    var url = inputs.connectionUrl || 'mongodb://localhost:27017/machinepack-mongodb-default';
 
-    // send back results object from mongo (see `example` in success exit)
-    return exits.success();
+    // Use connect method to connect to the mongo server
+    // (every call brings up a new connection for now)
+    MongoClient.connect(url, function(err, db) {
+
+      // Failed to connect
+      if (err) {
+        // TODO: negotiate this error further as needed
+        return exits.couldNotConnect(err);
+      }
+
+      // TODO: hit mongo  instead of setTimetoue
+      setTimeout(function (){
+
+        // TODO: if thisWriteResult.hasWriteConcernError(), then negotiate it and call the appropriate exit
+        // e.g.
+        // {
+        //   "code" : 64,
+        //   "errmsg" : "waiting for replication timed out at shard-a"
+        // }
+        //
+        // (usually a good idea to just hit `error` to start with, then add other exits as needed)
+
+
+        // Close the db connection
+        db.close();
+
+        // Then send back results object from mongo (see `example` in success exit)
+        return exits.success();
+      }, 5);
+
+
+    });
+
+
+
   },
 
 };
