@@ -88,6 +88,9 @@ module.exports = {
 
   fn: function(inputs, exits) {
 
+    // Bring in a mongo driver
+    var mongo = require('mongodb');
+
     var validQuery = (function isQueryValid (query){
       // TODO: validate query -- all we know is that it will be a dictionary (plain ole js object)
       return true;
