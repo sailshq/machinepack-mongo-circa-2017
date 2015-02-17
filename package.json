@@ -21,6 +21,8 @@
   },
   "machinepack": {
     "friendlyName": "MongoDB",
+    "extendedDescription": "Uses the Node.js mongdb driver located at https://github.com/mongodb/node-mongodb-native",
+    "moreInfoUrl": "https://github.com/mongodb/node-mongodb-native",
     "machineDir": "machines/",
     "machines": [
       "update-documents"
