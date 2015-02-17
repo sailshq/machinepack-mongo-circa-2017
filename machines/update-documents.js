@@ -93,6 +93,10 @@ module.exports = {
       extendedDescription: 'Make sure the credentials are correct and that the server is running (i.e. to run mongo locally, do `mongod`)'
     },
 
+    invalidCollection: {
+      description: 'Provided `collection` input is not a valid name for a MongoDB collection.',
+    },
+
     success: {
       description: 'Done.',
       moreInfoUrl: 'http://docs.mongodb.org/manual/reference/method/db.collection.update/#writeresults-update',
@@ -119,6 +123,10 @@ module.exports = {
       return exits.invalidQuery();
     }
 
+    // TODO: validate `update` input
+
+    // TODO: validate other inputs
+
 
     // Connection URL
     var url = inputs.connectionUrl || 'mongodb://localhost:27017/machinepack-mongodb-default';
@@ -133,33 +141,52 @@ module.exports = {
         return exits.couldNotConnect(err);
       }
 
-      // TODO: hit mongo  instead of setTimetoue
-      setTimeout(function (){
+      // Look up collection
+      var collection;
+      try {
+        collection = db.collection(inputs.collection);
+      }
+      catch (e) {
+        // If collection does not exist,
+        if (!collection) {
+          // Close the db connection
+          db.close();
+          // and call back w/ an error.
+          return exits.invalidCollection();
+        }
+      }
 
-        // TODO: if thisWriteResult.hasWriteConcernError()...
-        if (false) {
+
+      // TODO: Prepare the opts object
+      var opts = {};
+      // if (!_.isUndefined(inputs.upsert)) { opts.upsert = inputs.upsert;} ...
+      // etc.
+
+      // Hit mongo w/ the update
+      collection.update(inputs.query, inputs.update, opts, function (err, result) {
+          // if thisWriteResult.hasWriteConcernError()...
+          if (err) {
+
+            // Close the db connection
+            db.close();
+
+            // ...then negotiate it and call the appropriate exit
+            // e.g.
+            // {
+            //   "code" : 64,
+            //   "errmsg" : "waiting for replication timed out at shard-a"
+            // }
+            // (usually a good idea to just hit `error` to start with, then add other exits as needed)
+            return exits.error(err);
+          }
 
           // Close the db connection
           db.close();
 
-          // ...then negotiate it and call the appropriate exit
-          // e.g.
-          // {
-          //   "code" : 64,
-          //   "errmsg" : "waiting for replication timed out at shard-a"
-          // }
-          // (usually a good idea to just hit `error` to start with, then add other exits as needed)
-          return exits.error(new Error('not implemented yet'));
-        }
+          // Then send back result object from mongo (see `example` in success exit)
+          return exits.success(result);
 
-
-        // Close the db connection
-        db.close();
-
-        // Then send back results object from mongo (see `example` in success exit)
-        return exits.success();
-      }, 5);
-
+      });
 
     });
 
