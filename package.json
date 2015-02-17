@@ -12,7 +12,7 @@
   ],
   "author": "",
   "license": "MIT",
-  "dependencies":{
+  "dependencies": {
     "machine": "^3.0.0"
   },
   "devDependencies": {
@@ -21,6 +21,13 @@
   "machinepack": {
     "friendlyName": "MongoDB",
     "machineDir": "machines/",
-    "machines": []
+    "machines": [
+      "update-documents"
+    ],
+    "testsUrl": "https://travis-ci.org/mikermcneil/machinepack-mongodb"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:mikermcneil/machinepack-mongodb.git"
   }
 }
