@@ -25,7 +25,11 @@
     "moreInfoUrl": "https://github.com/mongodb/node-mongodb-native",
     "machineDir": "machines/",
     "machines": [
-      "update-documents"
+      "update-documents",
+      "list-collections",
+      "count-documents",
+      "describe-collection",
+      "list-documents"
     ],
     "testsUrl": "https://travis-ci.org/mikermcneil/machinepack-mongodb"
   },

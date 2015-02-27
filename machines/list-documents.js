@@ -1,16 +1,13 @@
 module.exports = {
 
 
-  friendlyName: 'Update documents',
+  friendlyName: 'List documents',
 
 
-  description: 'Modify existing documents in a collection.',
+  description: 'List documents in this Mongo collection which match the specified criteria.',
 
 
   extendedDescription: '',
-
-
-  moreInfoUrl: 'http://docs.mongodb.org/manual/reference/method/db.collection.update/#db.collection.update',
 
 
   inputs: {
@@ -29,42 +26,35 @@ module.exports = {
     },
 
     query: {
-      description: 'The selection criteria for the update.',
-      extendedDescription: 'Uses the same query selectors as in the find() method.',
+      description: 'The selection criteria (like the WHERE clause)',
+      extendedDescription: 'Standard query selectors from the Mongo find() method.',
       moreInfoUrl: 'http://docs.mongodb.org/manual/reference/operator/query/#query-selectors',
       typeclass: 'dictionary',
       required: true
     },
 
-    update: {
-      description: 'The modifications to apply.',
-      moreInfoUrl: 'http://docs.mongodb.org/manual/reference/method/db.collection.update/#update-parameter',
+    limit: {
+      description: 'If specified, limits number of documents returned in the query (useful for pagination)',
+      moreInfoUrl: 'http://mongodb.github.io/node-mongodb-native/api-generated/collection.html#find'
+    },
+
+    skip: {
+      description: 'If specified, skips N documents ahead in the query (useful for pagination)',
+      moreInfoUrl: 'http://mongodb.github.io/node-mongodb-native/api-generated/collection.html#find'
+    },
+
+    sort: {
+      description: 'If specified, the documents coming back from the query will be sorted according to this dictionary.',
+      typeclass: 'dictionary',
+      moreInfoUrl: 'http://mongodb.github.io/node-mongodb-native/api-generated/collection.html#find'
+    },
+
+    schema: {
+      description: 'An example indicating what each returned document should look like.',
+      extendedDescription: 'This is used to determine the `fields` (i.e. projection) passed in w/ the query.',
       typeclass: 'dictionary',
       required: true
-    },
-
-    upsert: {
-      description: ' If set to true, creates a new document when no document matches the query criteria.',
-      extendedDescription: 'The default value is false, which does not insert a new document when no match is found.',
-      defaultsTo: false,
-      example: true
-    },
-
-    multi: {
-      description: 'If set to true, updates multiple documents that meet the query criteria.',
-      extendedDescription: 'If set to false, updates one document. The default value is false.',
-      defaultsTo: false,
-      moreInfoUrl: 'http://docs.mongodb.org/manual/reference/method/db.collection.update/#multi-parameter',
-      example: true
-    },
-
-    writeConcern: {
-      description: ' A document expressing the write concern. Omit to use the default write concern.',
-      moreInfoUrl: 'http://docs.mongodb.org/manual/reference/method/db.collection.update/#db.collection.update',
-      typeclass: 'dictionary'
-    },
-
-
+    }
 
   },
 
@@ -75,17 +65,7 @@ module.exports = {
   exits: {
 
     error: {
-      description: 'Unexpected error occurred.'
-    },
-
-    invalidQuery: {
-      description: 'Provided query was invalid.',
-      moreInfoUrl: 'http://docs.mongodb.org/manual/reference/operator/query/#query-selectors'
-    },
-
-    invalidUpdate: {
-      description: 'Provided `update` input was invalid.',
-      moreInfoUrl: 'http://docs.mongodb.org/manual/reference/method/db.collection.update/#update-parameter'
+      description: 'Unexpected error occurred.',
     },
 
     couldNotConnect: {
@@ -98,19 +78,17 @@ module.exports = {
     },
 
     success: {
-      description: 'Done.',
-      moreInfoUrl: 'http://docs.mongodb.org/manual/reference/method/db.collection.update/#writeresults-update',
-      example: {
-        nMatched: 1,
-        nUpserted: 0,
-        nModified: 1
+      description: 'Returns an array of documents.',
+      getExample: function (inputs){
+        return inputs.schema;
       }
-    }
+    },
 
   },
 
 
-  fn: function(inputs, exits) {
+  fn: function (inputs,exits) {
+
 
     // Bring in a mongo driver
     var MongoClient = require('mongodb').MongoClient;
@@ -123,9 +101,7 @@ module.exports = {
       return exits.invalidQuery();
     }
 
-    // TODO: validate `update` input
-
-    // TODO: validate other inputs
+    // TODO: validate inputs
 
 
     // Connection URL
@@ -162,8 +138,8 @@ module.exports = {
       // if (!_.isUndefined(inputs.upsert)) { opts.upsert = inputs.upsert;} ...
       // etc.
 
-      // Hit mongo w/ the update
-      collection.update(inputs.query, inputs.update, opts, function (err, result) {
+      // Hit mongo w/ the find
+      collection.find(inputs.query, /* ... todo: al the things */ opts, function (err, result) {
           // if thisWriteResult.hasWriteConcernError()...
           if (err) {
 
@@ -192,6 +168,9 @@ module.exports = {
 
 
 
+
   },
+
+
 
 };

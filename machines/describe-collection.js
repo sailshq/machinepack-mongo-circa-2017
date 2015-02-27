@@ -1,0 +1,68 @@
+module.exports = {
+
+
+  friendlyName: 'Describe collection',
+
+
+  description: 'List an approximation of the fields that are found in each document of a Mongo collection.',
+
+
+  extendedDescription: '',
+
+
+  inputs: {
+
+    connectionUrl: {
+      description: 'The mongoDB connection URL',
+      moreInfoUrl: 'http://docs.mongodb.org/manual/reference/connection-string/',
+      defaultsTo: 'mongodb://localhost:27017/machinepack-mongodb-default',
+      example: 'mongodb://localhost:27017/machinepack-mongodb-default'
+    },
+
+    collection: {
+      description: 'The name of the collection.',
+      example: 'direwolves',
+      required: true
+    },
+
+  },
+
+
+  defaultExit: 'success',
+
+
+  exits: {
+
+    error: {
+      description: 'Unexpected error occurred.',
+    },
+
+    couldNotConnect: {
+      description: 'Could not connect to MongoDB server at specified `connectionUrl`.',
+      extendedDescription: 'Make sure the credentials are correct and that the server is running (i.e. to run mongo locally, do `mongod`)'
+    },
+
+    invalidCollection: {
+      description: 'Provided `collection` input is not a valid name for a MongoDB collection.',
+    },
+
+    success: {
+      description: 'Returns an array of things.',
+      example: [{
+        fieldName: 'birthday',
+        type: 'string', // number, string, boolean, dictionary, or array
+        isIndexed: true,
+        isUnique: true
+      }]
+    },
+
+  },
+
+
+  fn: function (inputs,exits) {
+    return exits.error('TODO');
+  },
+
+
+
+};
