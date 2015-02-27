@@ -1,0 +1,10 @@
+{
+  "machine": "describe-collection",
+  "expectations": [
+    {
+      "todo": true,
+      "using": {},
+      "outcome": "success"
+    }
+  ]
+}

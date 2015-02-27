@@ -1,0 +1,10 @@
+{
+  "machine": "count-documents",
+  "expectations": [
+    {
+      "todo": true,
+      "using": {},
+      "outcome": "success"
+    }
+  ]
+}
