@@ -35,12 +35,14 @@ module.exports = {
 
     limit: {
       description: 'If specified, limits number of documents returned in the query (useful for pagination)',
-      moreInfoUrl: 'http://mongodb.github.io/node-mongodb-native/api-generated/collection.html#find'
+      moreInfoUrl: 'http://mongodb.github.io/node-mongodb-native/api-generated/collection.html#find',
+      example: 30
     },
 
     skip: {
       description: 'If specified, skips N documents ahead in the query (useful for pagination)',
-      moreInfoUrl: 'http://mongodb.github.io/node-mongodb-native/api-generated/collection.html#find'
+      moreInfoUrl: 'http://mongodb.github.io/node-mongodb-native/api-generated/collection.html#find',
+      example: 30
     },
 
     sort: {
