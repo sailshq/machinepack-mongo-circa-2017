@@ -32,6 +32,7 @@
       "get-connection",
       "release-connection",
       "compile-query",
+      "execute-query",
       "send-query",
       "send-native-query"
     ],
