@@ -29,6 +29,7 @@
     "moreInfoUrl": "https://github.com/mongodb/node-mongodb-native",
     "machineDir": "machines/",
     "machines": [
+      "get-connection",
       "send-native-query"
     ],
     "testsUrl": "https://travis-ci.org/mikermcneil/machinepack-mongodb"
