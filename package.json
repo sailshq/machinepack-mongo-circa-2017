@@ -30,6 +30,7 @@
     "machineDir": "machines/",
     "machines": [
       "get-connection",
+      "release-connection",
       "compile-query",
       "send-native-query"
     ],
