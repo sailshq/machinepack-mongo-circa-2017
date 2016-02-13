@@ -32,6 +32,7 @@
       "get-connection",
       "release-connection",
       "compile-query",
+      "send-query",
       "send-native-query"
     ],
     "testsUrl": "https://travis-ci.org/mikermcneil/machinepack-mongodb"
