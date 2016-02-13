@@ -30,6 +30,7 @@
     "machineDir": "machines/",
     "machines": [
       "get-connection",
+      "compile-query",
       "send-native-query"
     ],
     "testsUrl": "https://travis-ci.org/mikermcneil/machinepack-mongodb"
