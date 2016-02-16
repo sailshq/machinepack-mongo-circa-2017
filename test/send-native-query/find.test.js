@@ -41,14 +41,14 @@ describe('Send Native Query :: ', function() {
         // Send the native query and check the results
         Pack.sendNativeQuery({
           connection: connection,
-          compiledQuery: query
-        }).exec(function(err, records) {
+          nativeQuery: query
+        }).exec(function(err, response) {
           // Always close the db connection
           db.close();
 
           assert(!err);
-          assert(_.isArray(records));
-          assert.equal(records.length, 110);
+          assert(_.isArray(response.result));
+          assert.equal(response.result.length, 110);
           done();
         });
       });

@@ -32,12 +32,10 @@
     "moreInfoUrl": "https://github.com/mongodb/node-mongodb-native",
     "machineDir": "machines/",
     "machines": [
-      "compile-query",
-      "execute-query",
+      "compile-statement",
       "get-connection",
       "release-connection",
-      "send-native-query",
-      "send-query"
+      "send-native-query"
     ],
     "testsUrl": "https://travis-ci.org/mikermcneil/machinepack-mongodb"
   },
