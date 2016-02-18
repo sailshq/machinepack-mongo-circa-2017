@@ -26,6 +26,7 @@ module.exports = {
     nativeQuery: {
       description: 'A native query for the database.',
       extendedDescription: 'This is oftentimes compiled from Waterline query syntax using "Compile statement", however it could also originate from userland code.',
+      moreInfoUrl: 'https://docs.mongodb.org/manual/reference/command/#user-commands',
       example: '*',
       required: true
     },

@@ -4,7 +4,7 @@ module.exports = {
   friendlyName: 'Get Connection',
 
 
-  description: 'Get an active connection to the database.',
+  description: 'Get an active connection to the MongoDB database from the pool.',
 
 
   cacheable: false,
@@ -17,12 +17,14 @@ module.exports = {
 
     connectionString: {
       description: 'A string containing all metadata and credentials necessary for connecting to the database.',
+      moreInfoUrl: 'https://docs.mongodb.org/manual/reference/connection-string/#connection-string-options',
       example: 'mongodb://localhost:27017/myproject',
       required: true
     },
 
     meta: {
-      description: 'An optional configuration dictionary to pass in.',
+      friendlyName: 'Meta (custom)',
+      description: 'Additional stuff to pass to the adapter. Use the `connectionOpts` key to pass additional connection options to the connection.',
       extendedDescription: 'See http://mongodb.github.io/node-mongodb-native/2.1/reference/connecting/connection-settings/ for a complete list of options.',
       example: '==='
     }
