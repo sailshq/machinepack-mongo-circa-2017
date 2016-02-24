@@ -97,7 +97,11 @@ module.exports = {
       'aggregate',
       'insert',
       'update',
-      'delete'
+      'delete',
+      'listCollections',
+      'create',
+      'createIndexes',
+      'drop'
     ];
 
     // Build a namespace that includes the dbName.cmd
