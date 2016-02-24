@@ -85,7 +85,7 @@ module.exports = {
     var _ = require('lodash');
 
     // Grab the client off the connection
-    var client = inputs.connection.client;
+    var client = inputs.connection;
 
     // Grab the query object from the inputs to make it easier to work with
     var query = inputs.nativeQuery;

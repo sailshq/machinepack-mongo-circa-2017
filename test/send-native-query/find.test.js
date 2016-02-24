@@ -33,14 +33,9 @@ describe('Send Native Query :: ', function() {
           return done(err);
         }
 
-        var connection = {
-          client: db,
-          release: db.close
-        };
-
         // Send the native query and check the results
         Pack.sendNativeQuery({
-          connection: connection,
+          connection: db,
           nativeQuery: query
         }).exec(function(err, response) {
           // Always close the db connection
