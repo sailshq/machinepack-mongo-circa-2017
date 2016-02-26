@@ -16,8 +16,8 @@
   "author": "Cody Stoltman <particlebanana@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "lodash": "4.3.0",
-    "machine": "10.4.0",
+    "lodash": "4.5.1",
+    "machine": "12.1.0",
     "machinepack-mongo-query-builder": "particlebanana/machinepack-mongo-query-builder",
     "mongodb": "2.1.7"
   },
