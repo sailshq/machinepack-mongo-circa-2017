@@ -91,7 +91,8 @@ module.exports = {
       'drop'
     ];
 
-    // Build a namespace that includes the dbName.cmd
+    // Build a namespace that includes the dbName.collectionName
+    // The collection name comes from the command being run.
     var cmd;
     _.each(query, function findCmd(val, key) {
       var idx = _.indexOf(commands, key);
@@ -105,14 +106,26 @@ module.exports = {
 
     // If there isn't a command to run, this is a malformed query
     if (!cmd) {
-      return exits.error('The nativeQuery input is malformed. It is missing a valid command.');
+      return exits.error(new Error('The nativeQuery input is malformed. It is missing a valid command.'));
     }
 
-    var ns = client.s.databaseName + '.' + query[cmd];
-    var _cursor = client.s.topology.cursor(ns, query, {});
+    // Combine the values to form the namespace.
+    // GetConnection stores the databaseName on the client under
+    // client.s.options and is generated from the connection string.
+    var ns = client.s.options.databaseName + '.' + query[cmd];
 
-    // Hold cursor state
-    var s = {};
+    // Map the Mongo standard command to the version of the mongo-core command
+    // that is slightly different from the standard version.
+    if (query.filter) {
+      query.query = query.filter;
+    }
+
+    if (query.projection) {
+      query.fields = query.projection;
+    }
+
+    // Build up a new cursor
+    var cursor = client.cursor(ns, query, {});
 
     // Build a toArray function that works the same as the Mongo Shell `toArray`
     // function. It pages through the cursor until there are no more results.
@@ -121,18 +134,16 @@ module.exports = {
       var items = [];
 
       // Reset cursor
-      _cursor.rewind();
-      s.state = 0;
+      cursor.rewind();
 
       // Fetch all the documents
       var fetchDocs = function fetchDocs() {
-        _cursor.next(function next(err, doc) {
+        cursor.next(function next(err, doc) {
           if (err) {
             return cb(err);
           }
 
           if (doc == null) {
-            s.state = 2;
             return cb(null, items);
           }
 
@@ -147,42 +158,14 @@ module.exports = {
       fetchDocs();
     };
 
-    // Negotiate an error message
-    // Currently just handles notUnique
-    var negotiateError = function negotiateError(err) {
-      // MongoDB duplicate key error code
-      if (err.code !== 11000) {
-        return err;
-      }
-
-      // Example errmsg: `E11000 duplicate key error index: db_name.model_name.$attribute_name_1 dup key: { : "value" }`
-      var matches = /E11000 duplicate key error index: .*?\..*?\.\$(.*?)_\d+\s+dup key: { : (.*) }$/.exec(err.errmsg);
-      if (!matches) {
-        // Example errmsg: E11000 duplicate key error collection: db_name.model_name index: attribute_name_1 dup key: { : "value" }
-        matches = /E11000 duplicate key error collection: .*?\..*? index: (.*?)_\d+\s+dup key: { : (.*) }$/.exec(err.errmsg);
-        if (!matches) {
-          // We cannot parse error message, return original error
-          return err;
-        }
-      }
-
-      // name of index (without _[digits] at the end)
-      var fieldName = matches[1];
-      return exits.notUnique({
-        columns: [fieldName],
-        error: err
-      });
-    };
-
-    // Run the cursor
-    toArray(function toArray(err, records) {
+    // Run through the cursor
+    toArray(function toArray(err, docs) {
       if (err) {
-        negotiateError(err);
         return exits.error(err);
       }
 
-      return exits.success({
-        result: records
+      exits.success({
+        result: docs
       });
     });
   }
