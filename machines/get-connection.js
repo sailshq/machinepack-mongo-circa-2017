@@ -76,26 +76,94 @@ module.exports = {
 
 
   fn: function getConnection(inputs, exits) {
-    var MongoClient = require('mongodb').MongoClient;
+    var Server = require('mongodb-core').Server;
+    var url = require('url');
+    var _ = require('lodash');
 
     // Connection URL
-    var url = inputs.connectionString;
+    var connectionString = inputs.connectionString;
     var meta = inputs.meta || {};
     var options = meta.connectionOpts || {};
+    var parsedUrl = url.parse(connectionString);
 
-    // Use connect method to connect to the mongo server.
-    MongoClient.connect(url, options, function connect(err, db) {
-      if (err) {
-        return exits.failedToConnect({
-          error: err
-        });
-      }
+    // Set user options
+    var connectionOptions = _.defaults({
+      reconnect: true,
+      reconnectTries: 30,
+      reconnectInterval: 1000,
+      emitError: false,
+      size: 10,
+      keepAlive: true,
+      keepAliveInitialDelay: 0,
+      noDelay: 0,
+      connectionTimeout: 0,
+      socketTimeout: 0,
+      ssl: false,
+      rejectUnauthorized: true,
+      promoteLongs: true
+    }, options);
 
-      // Build up a connection object that matches the expected exit example
-      return exits.success({
-        connection: db
-      });
+    // Add in the HOST and PORT from the connection string
+    connectionOptions.host = parsedUrl.hostname;
+    connectionOptions.port = parsedUrl.port;
+    connectionOptions.databaseName = parsedUrl.pathname.replace('/', '');
+
+    // Build a new server instance
+    var server = new Server(connectionOptions);
+
+    //  ╔═╗╦  ╦╔═╗╔╗╔╔╦╗  ╦ ╦╔═╗╔╗╔╔╦╗╦  ╔═╗╦═╗╔═╗
+    //  ║╣ ╚╗╔╝║╣ ║║║ ║   ╠═╣╠═╣║║║ ║║║  ║╣ ╠╦╝╚═╗
+    //  ╚═╝ ╚╝ ╚═╝╝╚╝ ╩   ╩ ╩╩ ╩╝╚╝═╩╝╩═╝╚═╝╩╚═╚═╝
+
+    // Wait for the connection event
+    server.on('connect', function connect(server) {
+      successCallback(server);
     });
+
+    server.on('close', function close(server) {
+      server.destroy();
+      failedToConnectCallback();
+    });
+
+    server.on('error', function error(server) {
+      server.destroy();
+      errorCallback();
+    });
+
+    server.on('timeout', function timeout(server) {
+      server.destroy();
+      failedToConnectCallback();
+    });
+
+    server.on('parseError', function parseError(server) {
+      server.destroy();
+      malformedCallback();
+    });
+
+    // Start connecting
+    server.connect();
+
+    //  ╔═╗╦  ╦╔═╗╔╗╔╔╦╗  ╔═╗╔═╗╦  ╦  ╔╗ ╔═╗╔═╗╦╔═╔═╗
+    //  ║╣ ╚╗╔╝║╣ ║║║ ║   ║  ╠═╣║  ║  ╠╩╗╠═╣║  ╠╩╗╚═╗
+    //  ╚═╝ ╚╝ ╚═╝╝╚╝ ╩   ╚═╝╩ ╩╩═╝╩═╝╚═╝╩ ╩╚═╝╩ ╩╚═╝
+
+    var errorCallback = function errorCallback() {
+      return exits.error();
+    };
+
+    var failedToConnectCallback = function failedToConnectCallback() {
+      return exits.failedToConnect();
+    };
+
+    var malformedCallback = function malformedCallback() {
+      return exits.malformed();
+    };
+
+    var successCallback = function successCallback(server) {
+      return exits.success({
+        connection: server
+      });
+    };
   }
 
 
