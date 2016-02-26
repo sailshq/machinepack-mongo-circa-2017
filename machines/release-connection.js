@@ -64,7 +64,7 @@ module.exports = {
 
 
   fn: function releaseConnection(inputs, exits) {
-    inputs.connection.close();
+    inputs.connection.destroy();
     return exits.success();
   }
 
