@@ -19,7 +19,7 @@
     "lodash": "4.5.1",
     "machine": "12.1.0",
     "machinepack-mongo-query-builder": "particlebanana/machinepack-mongo-query-builder",
-    "mongodb": "2.1.7"
+    "mongodb-core": "1.3.2"
   },
   "devDependencies": {
     "eslint": "1.10.3",
