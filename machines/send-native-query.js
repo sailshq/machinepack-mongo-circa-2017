@@ -63,19 +63,6 @@ module.exports = {
         error: '===',
         meta: '==='
       }
-    },
-
-    notUnique: {
-      friendlyName: 'Not unique',
-      description: 'The provided query failed because it would violate one or more uniqueness constraints.',
-      outputVariableName: 'report',
-      outputDescription: 'The `columns` property is an array containing the names of columns with uniquness constraint violations. The `error` property is a JavaScript Error instance containing the raw error from the database.  The `meta` property is reserved for custom adapter-specific extensions.',
-      example: {
-        // https://github.com/balderdashy/sails-mongo/blob/0656ff3471339b8bae299e6fd8b7b379f7a34c15/lib/utils.js#L182
-        columns: ['email_address'],
-        error: '===',
-        meta: '==='
-      }
     }
 
   },
