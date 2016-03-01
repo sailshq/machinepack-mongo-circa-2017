@@ -4,7 +4,7 @@ module.exports = {
   friendlyName: 'Get Connection',
 
 
-  description: 'Get an active connection to the MongoDB database from the pool.',
+  description: 'Get an active connection to a MongoDB database.',
 
 
   cacheable: false,
