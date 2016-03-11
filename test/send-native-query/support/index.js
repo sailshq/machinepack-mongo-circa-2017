@@ -3,10 +3,9 @@
  * collection that has been created.
  */
 
-var MongoClient = require('mongodb').MongoClient;
+var Server = require('mongodb-core').Server;
 var host = process.env.MONGO_PORT_27017_TCP_ADDR || 'localhost';
-var str = 'mongodb://' + host + ':27017/machinepack';
-
+var port = process.env.MONGO_PORT_27017_TCP_PORT || '27017';
 module.exports = {
   // Seed the collection with records
   seed: function seed(done) {
@@ -16,38 +15,41 @@ module.exports = {
     for (var i = 1; i <= 110; i++) {
       records.push({ name: 'user_' + i });
     }
-
-    MongoClient.connect(str, function openConnection(err, db) {
-      if (err) {
-        return done(err);
-      }
-
-      db.collection('users').insertMany(records, function insertRecords(err) {
-        db.close();
-        if (err) {
-          return done(err);
-        }
-
-        return done();
+    var server = new Server({ host: host, port: port, databaseName: 'machinepack' });
+    try {
+      // Wait for the connection event
+      server.on('connect', function(server) {
+        server.insert('machinepack.users', records, { }, function(err) {
+          if (err) {
+            return done(err);
+          }
+          server.destroy();
+          return done();
+        });
       });
-    });
+    } catch (err) {
+      return done(err);
+    }
+    server.connect();
   },
-
   // Destroy the collection
   cleanup: function cleanup(done) {
-    MongoClient.connect(str, function openConnection(err, db) {
-      if (err) {
-        return done(err);
-      }
-
-      db.collection('users').drop(function(err) {
-        db.close();
-        if (err) {
-          return done(err);
-        }
-
-        return done();
+    var server = new Server({ host: host, port: port, databaseName: 'machinepack' });
+    try {
+      // Wait for the connection event
+      server.on('connect', function(server) {
+        server.command('machinepack.$cmd', { drop: 'users' }, function(err) {
+          if (err) {
+            return done(err);
+          }
+          server.destroy();
+          return done();
+        });
       });
-    });
+      return done();
+    } catch (err) {
+      return done(err);
+    }
+    server.connect();
   }
 };
