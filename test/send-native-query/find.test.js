@@ -27,7 +27,7 @@ describe('Send Native Query :: ', function() {
         skip: 0,
         limit: 0
       };
-      var server = new Server({ host: host, port: port, databaseName: 'machinepack' });
+      var server = new Server({ host: host, port: port, databaseName: utils.databaseName });
       try {
         // Wait for the connection event
         server.on('connect', function(server) {

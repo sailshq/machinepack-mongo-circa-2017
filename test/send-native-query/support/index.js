@@ -6,7 +6,9 @@
 var Server = require('mongodb-core').Server;
 var host = process.env.MONGO_PORT_27017_TCP_ADDR || 'localhost';
 var port = process.env.MONGO_PORT_27017_TCP_PORT || '27017';
+var databaseName = 'machinepack';
 module.exports = {
+  databaseName: databaseName,
   // Seed the collection with records
   seed: function seed(done) {
     // Default mongo cursor batch size is 101, so insert 110 records to ensure
@@ -15,7 +17,7 @@ module.exports = {
     for (var i = 1; i <= 110; i++) {
       records.push({ name: 'user_' + i });
     }
-    var server = new Server({ host: host, port: port, databaseName: 'machinepack' });
+    var server = new Server({ host: host, port: port, databaseName: databaseName });
     try {
       // Wait for the connection event
       server.on('connect', function(server) {
@@ -34,16 +36,16 @@ module.exports = {
   },
   // Destroy the collection
   cleanup: function cleanup(done) {
-    var server = new Server({ host: host, port: port, databaseName: 'machinepack' });
+    var server = new Server({ host: host, port: port, databaseName: databaseName });
     try {
       // Wait for the connection event
       server.on('connect', function(server) {
-        server.command('machinepack.$cmd', { drop: 'users' }, function(err) {
+        server.command(databaseName + '.$cmd', { drop: 'users' }, function(err, res) {
           if (err) {
             return done(err);
           }
           server.destroy();
-          return done();
+          return done(res);
         });
       });
       return done();
