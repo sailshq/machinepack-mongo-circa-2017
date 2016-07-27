@@ -1,0 +1,8 @@
+adapter:
+  build: .
+  volumes:
+   - .:/usr/src/app
+  links:
+   - mongo
+mongo:
+  image: mongo

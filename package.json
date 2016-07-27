@@ -1,23 +1,31 @@
 {
   "name": "machinepack-mongodb",
-  "version": "0.2.0",
+  "version": "1.0.0-pre1",
   "description": "Structured Node.js bindings for MongoDB.",
   "scripts": {
-    "test": "node ./node_modules/test-machinepack-mocha/bin/testmachinepack-mocha.js"
+    "test": "node ./node_modules/mocha/bin/mocha --recursive",
+    "fasttest": "node ./node_modules/mocha/bin/mocha --recursive",
+    "pretest": "npm run lint",
+    "lint": "eslint machines test"
   },
   "keywords": [
     "MongoDB",
     "machines",
     "machinepack"
   ],
-  "author": "",
+  "author": "Cody Stoltman <particlebanana@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "mongodb": "1.4.31",
+    "lodash": "4.5.1",
     "machine": "^12.3.0",
-    "mongodb": "1.4.31"
+    "machinepack-mongo-query-builder": "particlebanana/machinepack-mongo-query-builder",
+    "mongodb-core": "1.3.2"
   },
   "devDependencies": {
-    "test-machinepack-mocha": "^0.2.2"
+    "eslint": "1.10.3",
+    "espree": "3.0.1",
+    "mocha": "2.3.4"
   },
   "machinepack": {
     "friendlyName": "MongoDB",
@@ -25,11 +33,11 @@
     "moreInfoUrl": "https://github.com/mongodb/node-mongodb-native",
     "machineDir": "machines/",
     "machines": [
-      "update-documents",
-      "list-collections",
-      "count-documents",
-      "describe-collection",
-      "list-documents"
+      "compile-statement",
+      "get-connection",
+      "parse-native-query-error",
+      "release-connection",
+      "send-native-query"
     ],
     "implements": {
       "connectable": "1.0",
