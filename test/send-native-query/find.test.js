@@ -3,9 +3,9 @@ var _ = require('lodash');
 var Pack = require('../../index');
 var utils = require('./support');
 
-var MongoClient = require('mongodb').MongoClient;
+var Server = require('mongodb-core').Server;
 var host = process.env.MONGO_PORT_27017_TCP_ADDR || 'localhost';
-var str = 'mongodb://' + host + ':27017/machinepack';
+var port = process.env.MONGO_PORT_27017_TCP_PORT || '27017';
 
 describe('Send Native Query :: ', function() {
   describe('Find :: ', function() {
@@ -21,32 +21,34 @@ describe('Send Native Query :: ', function() {
     it('should return all the records using the cursor', function(done) {
       var query = {
         find: 'users',
-        filter: {},
-        sort: {},
-        projection: {},
+        filter: { },
+        sort: { },
+        projection: { },
         skip: 0,
         limit: 0
       };
+      var server = new Server({ host: host, port: port, databaseName: utils.databaseName });
+      try {
+        // Wait for the connection event
+        server.on('connect', function(server) {
+          // Send the native query and check the results
+          Pack.sendNativeQuery({
+            connection: server,
+            nativeQuery: query
+          }).exec(function(err, response) {
+            // Always close the db connection
+            server.destroy();
 
-      MongoClient.connect(str, function openConnection(err, db) {
-        if (err) {
-          return done(err);
-        }
-
-        // Send the native query and check the results
-        Pack.sendNativeQuery({
-          connection: db,
-          nativeQuery: query
-        }).exec(function(err, response) {
-          // Always close the db connection
-          db.close();
-
-          assert(!err);
-          assert(_.isArray(response.result));
-          assert.equal(response.result.length, 110);
-          done();
+            assert(!err);
+            assert(_.isArray(response.result));
+            assert.equal(response.result.length, 110);
+            return done();
+          });
         });
-      });
+      } catch (err) {
+        return done(err);
+      }
+      server.connect();
     });
   });
 });

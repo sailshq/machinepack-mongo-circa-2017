@@ -1,20 +1,9 @@
 module.exports = {
-
-
   friendlyName: 'Send Native Query',
-
-
   description: 'Send a native query to the database.',
-
-
   cacheable: false,
-
-
   sync: false,
-
-
   inputs: {
-
     connection: {
       friendlyName: 'Connection',
       description: 'An active database connection.',
@@ -22,7 +11,6 @@ module.exports = {
       example: '===',
       required: true
     },
-
     nativeQuery: {
       description: 'A native query for the database.',
       extendedDescription: 'This is oftentimes compiled from Waterline query syntax using "Compile statement", however it could also originate from userland code.',
@@ -30,7 +18,6 @@ module.exports = {
       example: '*',
       required: true
     },
-
     meta: {
       friendlyName: 'Meta (custom)',
       description: 'Additional stuff to pass to the adapter.',
@@ -39,10 +26,7 @@ module.exports = {
     }
 
   },
-
-
   exits: {
-
     success: {
       description: 'The native query was executed successfully.',
       outputVariableName: 'report',
@@ -52,7 +36,6 @@ module.exports = {
         meta: '==='
       }
     },
-
     badConnection: {
       friendlyName: 'Bad connection',
       description: 'The provided connection is no longer active; or possibly never was.',
@@ -64,14 +47,11 @@ module.exports = {
         meta: '==='
       }
     }
-
   },
-
-
   fn: function sendNativeQuery(inputs, exits) {
     var _ = require('lodash');
 
-    // Grab the client off the connection
+    // Grab the client from the connection
     var client = inputs.connection;
 
     // Grab the query object from the inputs to make it easier to work with
@@ -125,7 +105,7 @@ module.exports = {
     }
 
     // Build up a new cursor
-    var cursor = client.cursor(ns, query, {});
+    var cursor = client.cursor(ns, query, { });
 
     // Build a toArray function that works the same as the Mongo Shell `toArray`
     // function. It pages through the cursor until there are no more results.
@@ -143,7 +123,7 @@ module.exports = {
             return cb(err);
           }
 
-          if (doc == null) {
+          if (doc === null) {
             return cb(null, items);
           }
 
