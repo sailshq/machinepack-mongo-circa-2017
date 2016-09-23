@@ -8,7 +8,7 @@
 Structured Node.js bindings for MongoDB.
 
 
-## Installation &nbsp; [![NPM version](https://badge.fury.io/js/machinepack-mongodb.svg)](http://badge.fury.io/js/machinepack-mongodb) [![Build Status](https://travis-ci.org/mikermcneil/machinepack-mongodb.png?branch=master)](https://travis-ci.org/mikermcneil/machinepack-mongodb)
+## Installation &nbsp; [![NPM version](https://badge.fury.io/js/machinepack-mongodb.svg)](http://badge.fury.io/js/machinepack-mongodb) [![Build Status](https://travis-ci.org/treelinehq/machinepack-mongodb.png?branch=master)](https://travis-ci.org/treelinehq/machinepack-mongodb)
 
 ```sh
 $ npm install machinepack-mongodb
@@ -26,5 +26,4 @@ Learn more at <a href="http://node-machine.org/implementing/FAQ" title="Machine 
 
 ## License
 
-MIT &copy; 2015 Mike McNeil, Cody Stoltman &amp; contributors
-
+MIT &copy; 2015 - 2016 Mike McNeil, Cody Stoltman &amp; contributors
