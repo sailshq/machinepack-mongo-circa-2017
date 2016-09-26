@@ -7,6 +7,9 @@ sudo: false
 services:
   - mongodb
 
+before-script:
+  - sleep 15
+
 addons:
   apt:
     sources:
