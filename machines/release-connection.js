@@ -7,13 +7,7 @@ module.exports = {
   description: 'Release an active database connection.',
 
 
-  extendedDescription: 'Releases a connection back into the connection pool.',
-
-
-  cacheable: false,
-
-
-  sync: false,
+  extendedDescription: 'Depending on the implementation of this driver, this might release the connection back into the pool or close it entirely.  Regardless, if the provided connection has a transaction started, be sure to end the transaction by either committing it or rolling it back before releasing the connection.',
 
 
   inputs: {
@@ -21,15 +15,15 @@ module.exports = {
     connection: {
       friendlyName: 'Connection',
       description: 'An active database connection.',
-      extendedDescription: 'The provided database connection instance must still be active.  Only database connection instances created by the `getConnection()` machine in this adapter are supported.',
+      extendedDescription: 'The provided database connection instance must still be active.  Only database connection instances created by the `getConnection()` machine in this driver are supported.',
       example: '===',
       required: true
     },
 
     meta: {
       friendlyName: 'Meta (custom)',
-      description: 'Additional stuff to pass to the adapter.',
-      extendedDescription: 'This is reserved for custom adapter-specific extensions.  Please refer to the documentation for the adapter you are using for more specific information.',
+      description: 'Additional stuff to pass to the driver.',
+      extendedDescription: 'This is reserved for custom driver-specific extensions.  Please refer to the documentation for the driver you are using for more specific information.',
       example: '==='
     }
 
@@ -42,7 +36,7 @@ module.exports = {
       description: 'The connection was released and is no longer active.',
       extendedDescription: 'The provided connection may no longer be used for any subsequent queries.',
       outputVariableName: 'report',
-      outputDescription: 'The `meta` property is reserved for custom adapter-specific extensions.',
+      outputDescription: 'The `meta` property is reserved for custom driver-specific extensions.',
       example: {
         meta: '==='
       }
@@ -53,9 +47,8 @@ module.exports = {
       description: 'The provided connection is no longer active; or possibly never was.',
       extendedDescription: 'Usually, this means the connection to the database was lost due to a logic error or timing issue in userland code.  In production, this can mean that the database became overwhelemed or was shut off while some business logic was in progress.',
       outputVariableName: 'report',
-      outputDescription: 'The `error` property is a JavaScript Error instance containing the raw error from the database.  The `meta` property is reserved for custom adapter-specific extensions.',
+      outputDescription: 'The `meta` property is reserved for custom driver-specific extensions.',
       example: {
-        error: '===',
         meta: '==='
       }
     }
@@ -64,8 +57,12 @@ module.exports = {
 
 
   fn: function releaseConnection(inputs, exits) {
-    inputs.connection.destroy();
-    return exits.success();
+    // This is a no-op function because the cursor and the pool automatically
+    // releases the connection back into the pool once the query has run.
+    return exits.success({
+      meta: inputs.meta
+    });
   }
+
 
 };

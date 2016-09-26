@@ -4,28 +4,35 @@ module.exports = {
   friendlyName: 'Get Connection',
 
 
-  description: 'Get an active connection to a MongoDB database.',
+  description: 'Get an active connection to the database.',
 
 
-  cacheable: false,
-
-
-  sync: false,
+  extendedDescription:
+    'Depending on what driver this is, and the config of the specified connection manager, `getConnection()` ' +
+    'may involve opening a new connection, aquiring an already-open connection from an existing pool, or even ' +
+    'just returning a mock connection (e.g. a dictionary containing host/port/credentials-- for connection-less ' +
+    'database servers like ElasticSearch).',
 
 
   inputs: {
 
-    connectionString: {
-      description: 'A string containing all metadata and credentials necessary for connecting to the database.',
-      moreInfoUrl: 'https://docs.mongodb.org/manual/reference/connection-string/#connection-string-options',
-      example: 'mongodb://localhost:27017/myproject',
+    manager: {
+      friendlyName: 'Manager',
+      description: 'The connection manager instance to acquire the connection from.',
+      extendedDescription:
+        'Only managers built using the `createManager()` method of this driver are supported. ' +
+        'Also, the database connection manager instance provided must not have been destroyed--' +
+        'i.e. once `destroyManager()` is called on a manager, no more connections can be acquired ' +
+        'from it (also note that all existing connections become inactive-- see `destroyManager()` ' +
+        'for more on that).',
+      example: '===',
       required: true
     },
 
     meta: {
       friendlyName: 'Meta (custom)',
-      description: 'Additional stuff to pass to the adapter. Use the `connectionOpts` key to pass additional connection options to the connection.',
-      extendedDescription: 'See http://mongodb.github.io/node-mongodb-native/2.1/reference/connecting/connection-settings/ for a complete list of options.',
+      description: 'Additional stuff to pass to the driver.',
+      extendedDescription: 'This is reserved for custom driver-specific extensions. Please refer to the documentation for the driver you are using for more specific information.',
       example: '==='
     }
 
@@ -36,36 +43,37 @@ module.exports = {
 
     success: {
       description: 'A connection was successfully acquired.',
-      extendedDescription: 'This connection should be eventually released.  Otherwise, it may time out.  It is not a good idea to rely on database connections timing out-- be sure to release this connection when finished with it!',
+      extendedDescription: 'This connection should be eventually released, or its enclosing manager should be destroyed. Otherwise, it may time out. It is not a good idea to rely on database connections timing out-- be sure to release this connection (or destroy its manager) when finished with it!',
       outputVariableName: 'report',
-      outputDescription: 'The `connection` property is an active connection to the database.  The `meta` property is reserved for custom adapter-specific extensions.',
+      outputDescription: 'The `connection` property is an active connection to the database. The `meta` property is reserved for custom driver-specific extensions.',
       example: {
         connection: '===',
         meta: '==='
       }
     },
 
-    malformed: {
-      description: 'The provided connection string is malformed (the adapter DID NOT ATTEMPT to acquire a connection).',
+    failed: {
+      friendlyName: 'Failed',
+      description: 'Could not acquire a connection to the database via the provided connection manager.',
+      extendedDescription:
+        'If this exit is called, it might mean any of the following:\n' +
+        ' + there is no database server running at manager\'s configured host (i.e. even if it is just that the database process needs to be started)\n' +
+        ' + this Node.js process could not connect to the database server, perhaps because of firewall/proxy settings\n' +
+        ' + the database server doesn\'t recognize the configured "database" in the manager\'s connection string\n' +
+        ' + the credentials encoded in the manager\'s connection string are unrecognized or have insufficient access rights for this database\n' +
+        ' + the manager is no longer active, e.g. because it has already been destroyed, timed out, or the db server went offline\n' +
+        ' + any other miscellaneous connection error' +
+        '\n' +
+        'Advanced users should note that the underlying interpretation of this exit varies depending on three major ' +
+        'factors: (1) the implementation of the underlying database being supported, (2) the implementation of this driver, ' +
+        'and (3) any database-specific metadata within the provided connection manager (i.e. that was passed into the `meta` input ' +
+        'of `createManager()`. For example, a driver might choose to allow a few different types of connection managers to be ' +
+        'created. In some cases, the driver communicates with the db when the connection manager is created, but in others, it ' +
+        'waits until `getConnection()` is called. If an invalid connection string was supplied to `createManager()`, then in the ' +
+        'latter case, the manager would still be created successfully. But when `getConnection()` was called it would fail, ' +
+        'triggering this exit.',
       outputVariableName: 'report',
-      outputDescription: 'The `error` property is a JavaScript Error instance explaining that (and preferably "why") the provided connection string is invalid.  The `meta` property is reserved for custom adapter-specific extensions.',
-      example: {
-        error: '===',
-        meta: '==='
-      }
-    },
-
-    failedToConnect: {
-      description: 'Could not acquire a connection to the database using the specified connection string.',
-      extendedDescription: 'This might mean any of the following:\n' +
-      ' + the credentials encoded in the connection string are incorrect\n' +
-      ' + there is no database server running at the provided host (i.e. even if it is just that the database process needs to be started)\n' +
-      ' + there is no software "database" with the specified name running on the server\n' +
-      ' + the provided connection string does not have necessary access rights for the specified software "database"\n' +
-      ' + this Node.js process could not connect to the database, perhaps because of firewall/proxy settings\n' +
-      ' + any other miscellaneous connection error',
-      outputVariableName: 'report',
-      outputDescription: 'The `error` property is a JavaScript Error instance explaining that a connection could not be made.  The `meta` property is reserved for custom adapter-specific extensions.',
+      outputDescription: 'The `error` property is a JavaScript Error instance with more information and a stack trace. The `meta` property is reserved for custom driver-specific extensions.',
       example: {
         error: '===',
         meta: '==='
@@ -76,94 +84,13 @@ module.exports = {
 
 
   fn: function getConnection(inputs, exits) {
-    var Server = require('mongodb-core').Server;
-    var url = require('url');
-    var _ = require('lodash');
-
-    // Connection URL
-    var connectionString = inputs.connectionString;
-    var meta = inputs.meta || {};
-    var options = meta.connectionOpts || {};
-    var parsedUrl = url.parse(connectionString);
-
-    // Set user options
-    var connectionOptions = _.defaults({
-      reconnect: true,
-      reconnectTries: 30,
-      reconnectInterval: 1000,
-      emitError: false,
-      size: 10,
-      keepAlive: true,
-      keepAliveInitialDelay: 0,
-      noDelay: 0,
-      connectionTimeout: 0,
-      socketTimeout: 0,
-      ssl: false,
-      rejectUnauthorized: true,
-      promoteLongs: true
-    }, options);
-
-    // Add in the HOST and PORT from the connection string
-    connectionOptions.host = parsedUrl.hostname;
-    connectionOptions.port = parsedUrl.port;
-    connectionOptions.databaseName = parsedUrl.pathname.replace('/', '');
-
-    // Build a new server instance
-    var server = new Server(connectionOptions);
-
-    //  ╔═╗╦  ╦╔═╗╔╗╔╔╦╗  ╦ ╦╔═╗╔╗╔╔╦╗╦  ╔═╗╦═╗╔═╗
-    //  ║╣ ╚╗╔╝║╣ ║║║ ║   ╠═╣╠═╣║║║ ║║║  ║╣ ╠╦╝╚═╗
-    //  ╚═╝ ╚╝ ╚═╝╝╚╝ ╩   ╩ ╩╩ ╩╝╚╝═╩╝╩═╝╚═╝╩╚═╚═╝
-
-    // Wait for the connection event
-    server.on('connect', function connect(server) {
-      successCallback(server);
+    // This is a no-op function in mongo. Because mongo doensn't have things
+    // like transactions, each query runs on a different "connection". These
+    // connections are handled internally by their pool.
+    return exits.success({
+      connection: inputs.manager,
+      meta: inputs.meta
     });
-
-    server.on('close', function close(server) {
-      server.destroy();
-      failedToConnectCallback();
-    });
-
-    server.on('error', function error(server) {
-      server.destroy();
-      errorCallback();
-    });
-
-    server.on('timeout', function timeout(server) {
-      server.destroy();
-      failedToConnectCallback();
-    });
-
-    server.on('parseError', function parseError(server) {
-      server.destroy();
-      malformedCallback();
-    });
-
-    // Start connecting
-    server.connect();
-
-    //  ╔═╗╦  ╦╔═╗╔╗╔╔╦╗  ╔═╗╔═╗╦  ╦  ╔╗ ╔═╗╔═╗╦╔═╔═╗
-    //  ║╣ ╚╗╔╝║╣ ║║║ ║   ║  ╠═╣║  ║  ╠╩╗╠═╣║  ╠╩╗╚═╗
-    //  ╚═╝ ╚╝ ╚═╝╝╚╝ ╩   ╚═╝╩ ╩╩═╝╩═╝╚═╝╩ ╩╚═╝╩ ╩╚═╝
-
-    var errorCallback = function errorCallback() {
-      return exits.error();
-    };
-
-    var failedToConnectCallback = function failedToConnectCallback() {
-      return exits.failedToConnect();
-    };
-
-    var malformedCallback = function malformedCallback() {
-      return exits.malformed();
-    };
-
-    var successCallback = function successCallback(server) {
-      return exits.success({
-        connection: server
-      });
-    };
   }
 
 
