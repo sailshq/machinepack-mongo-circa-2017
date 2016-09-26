@@ -11,7 +11,7 @@ describe('Connectable ::', function() {
       var host = process.env.MONGO_1_PORT_27017_TCP_ADDR || 'localhost';
 
       Pack.createManager({
-        connectionString: 'mongodb://' + host + ':27017'
+        connectionString: 'mongodb://' + host + ':27017/mppg'
       })
       .exec(function(err, report) {
         if (err) {
