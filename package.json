@@ -27,9 +27,9 @@
     "mongo-query-builder": "treelinehq/mongo-query-builder"
   },
   "devDependencies": {
-    "eslint": "1.10.3",
-    "espree": "3.0.1",
-    "mocha": "2.3.4"
+    "eslint": "3.5.0",
+    "espree": "3.3.0",
+    "mocha": "3.0.2"
   },
   "machinepack": {
     "friendlyName": "MongoDB",
