@@ -53,6 +53,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:mikermcneil/machinepack-mongodb.git"
+    "url": "git@github.com:treelinehq/machinepack-mongodb.git"
   }
 }
