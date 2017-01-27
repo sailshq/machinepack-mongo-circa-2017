@@ -21,9 +21,9 @@
   "license": "MIT",
   "dependencies": {
     "lodash": "3.10.1",
-    "machine": "12.4.0",
-    "mongodb-core": "1.3.2",
-    "mongo-query-builder": "treelinehq/mongo-query-builder"
+    "machine": "^13.0.0-17",
+    "mongodb": "2.2.22",
+    "waterline-utils": "^1.3.2"
   },
   "devDependencies": {
     "eslint": "3.5.0",
