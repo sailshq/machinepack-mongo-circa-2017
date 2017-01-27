@@ -36,18 +36,15 @@
     "moreInfoUrl": "https://github.com/mongodb/node-mongodb-native",
     "machineDir": "machines/",
     "machines": [
-      "compile-statement",
-      "get-connection",
-      "parse-native-query-error",
-      "release-connection",
-      "send-native-query",
       "create-manager",
       "destroy-manager",
-      "parse-native-query-result"
+      "get-connection",
+      "parse-native-query-error",
+      "parse-native-query-result",
+      "release-connection"
     ],
     "implements": {
-      "connectable": "1.0",
-      "queryable": "1.0"
+      "connectable": "1.0"
     },
     "testsUrl": "https://travis-ci.org/treelinehq/machinepack-mongodb"
   },
