@@ -1,3 +1,8 @@
+var _ = require('lodash');
+var url = require('url');
+var util = require('util');
+var MongoClient = require('mongodb').MongoClient;
+
 module.exports = {
 
 
@@ -116,12 +121,6 @@ module.exports = {
   },
 
   fn: function createManager(inputs, exits) {
-    var util = require('util');
-    var url = require('url');
-    var _ = require('lodash');
-    var Server = require('mongodb-core').Server;
-
-
     // Note:
     // Support for different types of managers is database-specific, and is not
     // built into the Waterline driver spec-- however this type of configurability
@@ -158,11 +157,8 @@ module.exports = {
         // Mongo Server Options:
         // ============================================
 
-        // Basic:
-        'host', 'port', 'database', 'ssl',
-
         // SSL Options:
-        'sslValidate', 'sslCA', 'sslCert', 'sslKey', 'sslPass',
+        'ssl', 'sslValidate', 'sslCA', 'sslCert', 'sslKey', 'sslPass',
 
         // Connection Options:
         'poolSize', 'autoReconnect', 'noDelay', 'keepAlive', 'connectTimeoutMS',
@@ -188,7 +184,6 @@ module.exports = {
       // as options for the manager-- e.g. the connection strings of replicas, etc.
     }
 
-
     // Validate & parse connection string, pulling out Postgres client config
     // (call `malformed` if invalid).
     //
@@ -202,22 +197,6 @@ module.exports = {
         throw new Error('Protocol (i.e. `mongodb://`) is required in connection string.');
       }
 
-      // Parse port & host
-      var DEFAULT_HOST = 'localhost';
-      var DEFAULT_PORT = 27017;
-
-      if (parsedConnectionStr.port) {
-        _clientConfig.port = +parsedConnectionStr.port;
-      } else {
-        _clientConfig.port = DEFAULT_PORT;
-      }
-
-      if (parsedConnectionStr.hostname) {
-        _clientConfig.host = parsedConnectionStr.hostname;
-      } else {
-        _clientConfig.host = DEFAULT_HOST;
-      }
-
       // Parse user & password
       if (parsedConnectionStr.auth && _.isString(parsedConnectionStr.auth)) {
         var authPieces = parsedConnectionStr.auth.split(/:/);
@@ -228,20 +207,6 @@ module.exports = {
           _clientConfig.password = authPieces[1];
         }
       }
-
-      // Parse database name
-      if (_.isString(parsedConnectionStr.pathname)) {
-        var _databaseName = parsedConnectionStr.pathname;
-
-        // Trim leading and trailing slashes
-        _databaseName = _databaseName.replace(/^\/+/, '');
-        _databaseName = _databaseName.replace(/\/+$/, '');
-
-        // If anything is left, use it as the database name.
-        if (_databaseName) {
-          _clientConfig.database = _databaseName;
-        }
-      }
     } catch (_e) {
       _e.message = util.format('Provided value (`%s`) is not a valid Mongodb connection string.', inputs.connectionString) + ' Error details: ' + _e.message;
       return exits.malformed({
@@ -250,72 +215,19 @@ module.exports = {
       });
     }
 
-    // Build a new server instance.
-    // Pooling is automatically tracked inside the module so once a Server is
-    // created pooling will happen automatically.
-    var server = new Server(_clientConfig);
-
-    //  ╔═╗╦  ╦╔═╗╔╗╔╔╦╗  ╦ ╦╔═╗╔╗╔╔╦╗╦  ╔═╗╦═╗╔═╗
-    //  ║╣ ╚╗╔╝║╣ ║║║ ║   ╠═╣╠═╣║║║ ║║║  ║╣ ╠╦╝╚═╗
-    //  ╚═╝ ╚╝ ╚═╝╝╚╝ ╩   ╩ ╩╩ ╩╝╚╝═╩╝╩═╝╚═╝╩╚═╚═╝
-
-    // Wait for the connection event
-    server.on('connect', function connect(server) {
-      successCallback(server);
-    });
-
-    server.on('error', function error(error) {
-      errorCallback(error);
-    });
-
-    server.on('timeout', function timeout(error) {
-      failedToConnectCallback(error);
-    });
-
-    server.on('parseError', function parseError(error) {
-      malformedCallback(error);
-    });
-
-    // Start connecting
-    server.connect();
-
-    //  ╔═╗╦  ╦╔═╗╔╗╔╔╦╗  ╔═╗╔═╗╦  ╦  ╔╗ ╔═╗╔═╗╦╔═╔═╗
-    //  ║╣ ╚╗╔╝║╣ ║║║ ║   ║  ╠═╣║  ║  ╠╩╗╠═╣║  ╠╩╗╚═╗
-    //  ╚═╝ ╚╝ ╚═╝╝╚╝ ╩   ╚═╝╩ ╩╩═╝╩═╝╚═╝╩ ╩╚═╝╩ ╩╚═╝
-
-    var errorCallback = function errorCallback(error) {
-      return exits.error({
-        error: error,
-        meta: inputs.meta
-      });
-    };
-
-    var failedToConnectCallback = function failedToConnectCallback(error) {
-      return exits.failedToConnect({
-        error: error,
-        meta: inputs.meta
-      });
-    };
-
-    var malformedCallback = function malformedCallback(error) {
-      return exits.malformed({
-        error: error,
-        meta: inputs.meta
-      });
-    };
-
-    var successCallback = function successCallback(server) {
-      // Finally, build and return the manager.
-      var mgr = {
-        server: server,
-        connectionString: inputs.connectionString
-      };
+    MongoClient.connect(inputs.connectionString, _clientConfig, function connectCb(err, db) {
+      if (err) {
+        return exits.error({
+          error: err,
+          meta: inputs.meta
+        });
+      }
 
       return exits.success({
-        manager: mgr,
+        manager: db,
         meta: inputs.meta
       });
-    };
+    });
   }
 
 

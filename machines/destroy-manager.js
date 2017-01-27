@@ -60,8 +60,8 @@ module.exports = {
 
 
   fn: function destroyManager(inputs, exits) {
-    // Call destroy on the manager
-    inputs.manager.server.destroy();
+    // Call close on the manager
+    inputs.manager.close();
 
     return exits.success({
       meta: inputs.meta

@@ -1,5 +1,4 @@
 var assert = require('assert');
-var Server = require('mongodb-core').Server;
 var Pack = require('../../');
 
 describe('Connectable ::', function() {
@@ -34,10 +33,7 @@ describe('Connectable ::', function() {
         }
 
         // Assert that the report has a server object
-        assert(report.connection.server);
-
-        // Assert that a Mongo-Core Server is returned
-        assert(report.connection.server instanceof Server);
+        assert(report.connection);
 
         return done();
       });
