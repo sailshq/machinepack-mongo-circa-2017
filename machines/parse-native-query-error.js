@@ -1,3 +1,5 @@
+var _ = require('lodash');
+
 module.exports = {
 
 
@@ -39,18 +41,17 @@ module.exports = {
       extendedDescription: 'The footprint (`footprint`) will be coerced to a JSON-serializable dictionary if it isn\'t one already (see [rttc.dehydrate()](https://github.com/node-machine/rttc#dehydratevalue-allownullfalse-dontstringifyfunctionsfalse)). That means any Error instances therein will be converted to stacktrace strings.',
       outputVariableName: 'report',
       outputDescription: 'The `footprint` property is the normalized "footprint" representing the provided raw error.  Conforms to one of a handful of standardized footprint types expected by the Waterline driver interface.   The `meta` property is reserved for custom driver-specific extensions.',
-      example: {
-        footprint: {},
-        meta: '==='
-      }
+      // example: {
+      //   footprint: {},
+      //   meta: '==='
+      // }
+      example: '==='
     },
 
   },
 
 
   fn: function parseNativeQueryError(inputs, exits) {
-    var _ = require('lodash');
-
     // Local variable (`err`) for convenience.
     var err = inputs.nativeQueryError;
 

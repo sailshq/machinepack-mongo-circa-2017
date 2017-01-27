@@ -36,9 +36,10 @@ module.exports = {
       description: 'The specified manager and all of its active connections were successfully destroyed.',
       outputVariableName: 'report',
       outputDescription: 'The `meta` property is reserved for custom driver-specific extensions.',
-      example: {
-        meta: '==='
-      }
+      // example: {
+      //   meta: '==='
+      // }
+      example: '==='
     },
 
     failed: {
@@ -60,8 +61,8 @@ module.exports = {
 
 
   fn: function destroyManager(inputs, exits) {
-    // Call destroy on the manager
-    inputs.manager.server.destroy();
+    // Call close on the manager
+    inputs.manager.close();
 
     return exits.success({
       meta: inputs.meta
