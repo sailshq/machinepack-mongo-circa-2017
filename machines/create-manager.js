@@ -35,7 +35,8 @@ module.exports = {
         'input definition. Driver implementors should use `extendedDescription` and/or ' +
         '`moreInfoUrl` for explaining what the connection string means rather than focusing ' +
         'on how to generate it (use `whereToGet` for that).',
-      example: 'mongodb://foo:bar@localhost:27017/thedatabase',
+      // example: 'mongodb://foo:bar@localhost:27017/thedatabase',
+      example: '===',
       required: true
     },
 
@@ -76,10 +77,11 @@ module.exports = {
         'basis; and it may also vary based on the configuration passed into the `meta` input.',
       outputVariableName: 'report',
       outputDescription: 'The `manager` property is a manager instance that will be passed into `getConnection()`. The `meta` property is reserved for custom driver-specific extensions.',
-      example: {
-        manager: '===',
-        meta: '==='
-      }
+      // example: {
+      //   manager: '===',
+      //   meta: '==='
+      // }
+      example: '==='
     },
 
     malformed: {

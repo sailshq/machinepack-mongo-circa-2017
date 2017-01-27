@@ -46,10 +46,11 @@ module.exports = {
       extendedDescription: 'This connection should be eventually released, or its enclosing manager should be destroyed. Otherwise, it may time out. It is not a good idea to rely on database connections timing out-- be sure to release this connection (or destroy its manager) when finished with it!',
       outputVariableName: 'report',
       outputDescription: 'The `connection` property is an active connection to the database. The `meta` property is reserved for custom driver-specific extensions.',
-      example: {
-        connection: '===',
-        meta: '==='
-      }
+      // example: {
+      //   connection: '===',
+      //   meta: '==='
+      // }
+      example: '==='
     },
 
     failed: {

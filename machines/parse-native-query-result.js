@@ -1,3 +1,5 @@
+var _ = require('lodash');
+
 module.exports = {
 
 
@@ -61,7 +63,6 @@ module.exports = {
 
 
   fn: function parseNativeQueryResult(inputs, exits) {
-    var _ = require('lodash');
     var normalizedResult;
 
     switch (inputs.queryType) {

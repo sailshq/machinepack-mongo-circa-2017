@@ -36,9 +36,10 @@ module.exports = {
       description: 'The specified manager and all of its active connections were successfully destroyed.',
       outputVariableName: 'report',
       outputDescription: 'The `meta` property is reserved for custom driver-specific extensions.',
-      example: {
-        meta: '==='
-      }
+      // example: {
+      //   meta: '==='
+      // }
+      example: '==='
     },
 
     failed: {
