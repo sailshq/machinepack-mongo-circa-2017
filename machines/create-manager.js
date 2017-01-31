@@ -190,8 +190,16 @@ module.exports = {
     // (call `malformed` if invalid).
     //
     // Remember: connection string takes priority over `meta` in the event of a conflict.
+    var connectionString = inputs.connectionString;
     try {
-      var parsedConnectionStr = url.parse(inputs.connectionString);
+      // We don't actually care about the protocol, the MongoDB drivr does,
+      // plus `url.parse()` returns funky results if the argument doesn't have one.
+      // So we'll add one if necessary.
+      // See https://en.wikipedia.org/wiki/Uniform_Resource_Identifier#Syntax
+      if (!connectionString.match(/^[a-zA-Z][a-zA-Z0-9+.-]*:\/\//)) {
+        connectionString = 'mongodb://' + connectionString;
+      }
+      var parsedConnectionStr = url.parse(connectionString);
 
       // Validate that a protocol was found before other pieces
       // (otherwise other parsed info will be very weird and wrong)
@@ -217,7 +225,7 @@ module.exports = {
       });
     }
 
-    MongoClient.connect(inputs.connectionString, _clientConfig, function connectCb(err, db) {
+    MongoClient.connect(connectionString, _clientConfig, function connectCb(err, db) {
       if (err) {
         return exits.error({
           error: err,
