@@ -5,7 +5,7 @@
   "scripts": {
     "test": "node ./node_modules/mocha/bin/mocha --recursive",
     "fasttest": "node ./node_modules/mocha/bin/mocha --recursive",
-    "pretest": "npm run lint",
+    "pretest": "nodever=`node -e \"console.log('\\`node -v\\`'[1]);\"` && if [ $nodever != \"0\" ]; then npm run lint; fi",
     "lint": "eslint machines test",
     "docker": "docker-compose run adapter bash"
   },
