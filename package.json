@@ -1,5 +1,5 @@
 {
-  "name": "machinepack-mongodb",
+  "name": "machinepack-mongo",
   "version": "1.0.0-1",
   "description": "Structured Node.js bindings for MongoDB.",
   "scripts": {
@@ -46,10 +46,10 @@
     "implements": {
       "connectable": "1.0"
     },
-    "testsUrl": "https://travis-ci.org/treelinehq/machinepack-mongodb"
+    "testsUrl": "https://travis-ci.org/treelinehq/machinepack-mongo"
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:treelinehq/machinepack-mongodb.git"
+    "url": "git@github.com:treelinehq/machinepack-mongo.git"
   }
 }

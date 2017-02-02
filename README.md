@@ -1,22 +1,22 @@
 <h1>
   <a href="http://node-machine.org" title="Node-Machine public registry"><img alt="node-machine logo" title="Node-Machine Project" src="http://node-machine.org/images/machine-anthropomorph-for-white-bg.png" width="50" /></a>
-  machinepack-mongodb
+  machinepack-mongo
 </h1>
 
-### [Docs](http://node-machine.org/machinepack-mongodb) &nbsp; [Browse other machines](http://node-machine.org/machinepacks) &nbsp;  [FAQ](http://node-machine.org/implementing/FAQ)  &nbsp;  [Newsgroup](https://groups.google.com/forum/?hl=en#!forum/node-machine)
+### [Docs](http://node-machine.org/machinepack-mongo) &nbsp; [Browse other machines](http://node-machine.org/machinepacks) &nbsp;  [FAQ](http://node-machine.org/implementing/FAQ)  &nbsp;  [Newsgroup](https://groups.google.com/forum/?hl=en#!forum/node-machine)
 
 Structured Node.js bindings for MongoDB.
 
 
-## Installation &nbsp; [![NPM version](https://badge.fury.io/js/machinepack-mongodb.svg)](http://badge.fury.io/js/machinepack-mongodb) [![Build Status](https://travis-ci.org/treelinehq/machinepack-mongodb.png?branch=master)](https://travis-ci.org/treelinehq/machinepack-mongodb)
+## Installation &nbsp; [![NPM version](https://badge.fury.io/js/machinepack-mongo.svg)](http://badge.fury.io/js/machinepack-mongo) [![Build Status](https://travis-ci.org/treelinehq/machinepack-mongo.png?branch=master)](https://travis-ci.org/treelinehq/machinepack-mongo)
 
 ```sh
-$ npm install machinepack-mongodb
+$ npm install machinepack-mongo
 ```
 
 ## Usage
 
-For the latest usage documentation, version information, and test status of this module, see <a href="http://node-machine.org/machinepack-mongodb" title="Structured Node.js bindings for MongoDB. (for node.js)">http://node-machine.org/machinepack-mongodb</a>.  The generated manpages for each machine contain a complete reference of all expected inputs, possible exit states, and example return values.  If you need more help, or find a bug, jump into [Gitter](https://gitter.im/node-machine/general) or leave a message in the project [newsgroup](https://groups.google.com/forum/?hl=en#!forum/node-machine).
+For the latest usage documentation, version information, and test status of this module, see <a href="http://node-machine.org/machinepack-mongo" title="Structured Node.js bindings for MongoDB. (for node.js)">http://node-machine.org/machinepack-mongo</a>.  The generated manpages for each machine contain a complete reference of all expected inputs, possible exit states, and example return values.  If you need more help, or find a bug, jump into [Gitter](https://gitter.im/node-machine/general) or leave a message in the project [newsgroup](https://groups.google.com/forum/?hl=en#!forum/node-machine).
 
 ## About  &nbsp; [![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/node-machine/general?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
