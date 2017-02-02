@@ -148,7 +148,7 @@ module.exports = {
     // Validate and parse `meta` (if specified).
     if (!_.isUndefined(inputs.meta)) {
       if (!_.isObject(inputs.meta)) {
-        return exits.error('If provided, `meta` must be a dictionary.');
+        return exits.error(new Error('If provided, `meta` must be a dictionary.'));
       }
 
       // Use properties of `meta` directly as Mongo Server config.
@@ -227,10 +227,7 @@ module.exports = {
 
     MongoClient.connect(connectionString, _clientConfig, function connectCb(err, db) {
       if (err) {
-        return exits.error({
-          error: err,
-          meta: inputs.meta
-        });
+        return exits.error(err);
       }
 
       return exits.success({
