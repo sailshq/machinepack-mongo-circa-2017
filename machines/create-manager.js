@@ -230,8 +230,17 @@ module.exports = {
         return exits.error(err);
       }
 
+      // `db` will be our manager.
+      var manager = db;
+
+      // Now mutate this manager, giving it a telltale.
+      //
+      // > For more context/history, see:
+      // > https://github.com/treelinehq/machinepack-mongodb/issues/2#issuecomment-267517800
+      manager._isFromMPMongo = true;
+
       return exits.success({
-        manager: db,
+        manager: manager,
         meta: inputs.meta
       });
     });

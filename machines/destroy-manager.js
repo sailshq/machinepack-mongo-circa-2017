@@ -1,3 +1,6 @@
+var _ = require('@sailshq/lodash');
+
+
 module.exports = {
 
 
@@ -61,6 +64,14 @@ module.exports = {
 
 
   fn: function destroyManager(inputs, exits) {
+
+    // If the manager doesn't have a `close` function for some reason,
+    // then catch that ahead of time so we can provide a slightly nicer
+    // error message and help prevent confusion.
+    if (!_.isObject(inputs.manager) || !_.isFunction(inputs.manager.close)) {
+      return exits.error(new Error('The provided `manager` is not a valid manager created by this driver.  (It should be a dictionary which contains a `close` function, at the very least.)'));
+    }
+
     // Call close on the manager
     inputs.manager.close();
 
