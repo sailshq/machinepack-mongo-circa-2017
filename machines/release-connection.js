@@ -1,7 +1,7 @@
 module.exports = {
 
 
-  friendlyName: 'Release Connection',
+  friendlyName: 'Release connection',
 
 
   description: 'Release an active database connection.',
