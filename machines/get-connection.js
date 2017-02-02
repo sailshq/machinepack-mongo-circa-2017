@@ -1,7 +1,7 @@
 module.exports = {
 
 
-  friendlyName: 'Get Connection',
+  friendlyName: 'Get connection',
 
 
   description: 'Get an active connection to the database.',

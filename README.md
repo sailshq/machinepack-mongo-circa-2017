@@ -3,9 +3,12 @@
   machinepack-mongodb
 </h1>
 
-### [Docs](http://node-machine.org/machinepack-mongodb) &nbsp; [Browse other machines](http://node-machine.org/machinepacks) &nbsp;  [FAQ](http://node-machine.org/implementing/FAQ)  &nbsp;  [Newsgroup](https://groups.google.com/forum/?hl=en#!forum/node-machine)
+
+### [Docs](http://node-machine.org/machinepack-mongodb) &nbsp; [Browse other machines](http://node-machine.org/machinepacks) &nbsp;  [FAQ](http://node-machine.org/implementing/FAQ)  &nbsp;  [Support/Resources](http://sailsjs.com/support)
 
 Structured Node.js bindings for MongoDB.
+
+> A Waterline driver, compatible with the Sails framework and Waterline ORM.
 
 
 ## Installation &nbsp; [![NPM version](https://badge.fury.io/js/machinepack-mongodb.svg)](http://badge.fury.io/js/machinepack-mongodb) [![Build Status](https://travis-ci.org/treelinehq/machinepack-mongodb.png?branch=master)](https://travis-ci.org/treelinehq/machinepack-mongodb)
@@ -16,14 +19,26 @@ $ npm install machinepack-mongodb
 
 ## Usage
 
-For the latest usage documentation, version information, and test status of this module, see <a href="http://node-machine.org/machinepack-mongodb" title="Structured Node.js bindings for MongoDB. (for node.js)">http://node-machine.org/machinepack-mongodb</a>.  The generated manpages for each machine contain a complete reference of all expected inputs, possible exit states, and example return values.  If you need more help, or find a bug, jump into [Gitter](https://gitter.im/node-machine/general) or leave a message in the project [newsgroup](https://groups.google.com/forum/?hl=en#!forum/node-machine).
+For the latest usage documentation, version information, and test status of this module, see <a href="http://node-machine.org/machinepack-mongodb" title="Structured Node.js bindings for MongoDB. (for node.js)">http://node-machine.org/machinepack-mongodb</a>.  The generated manpages for each machine contain a complete reference of all expected inputs, possible exit states, and example return values.
 
-## About  &nbsp; [![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/node-machine/general?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-This is a [machinepack](http://node-machine.org/machinepacks), an NPM module which exposes a set of related Node.js [machines](http://node-machine.org/spec/machine) according to the [machinepack specification](http://node-machine.org/spec/machinepack).
-Documentation pages for the machines contained in this module (as well as all other NPM-hosted machines for Node.js) are automatically generated and kept up-to-date on the <a href="http://node-machine.org" title="Public machine registry for Node.js">public registry</a>.
-Learn more at <a href="http://node-machine.org/implementing/FAQ" title="Machine Project FAQ (for implementors)">http://node-machine.org/implementing/FAQ</a>.
+## Help
+
+If you have questions or are having trouble, click [here](http://sailsjs.com/support).
+
+
+## Bugs &nbsp; [![NPM version](https://badge.fury.io/js/machinepack-mongodb.svg)](http://npmjs.com/package/machinepack-mongodb)
+
+To report a bug, [click here](http://sailsjs.com/bugs).
+
+
+## Contributing
+
+Please observe the guidelines and conventions laid out in the [Sails project contribution guide](http://sailsjs.com/documentation/contributing) when opening issues or submitting pull requests.
+
+[![NPM](https://nodei.co/npm/machinepack-mongodb.png?downloads=true)](http://npmjs.com/package/machinepack-mongodb)
+
 
 ## License
 
-MIT &copy; 2015 - 2016 Mike McNeil, Cody Stoltman &amp; contributors
+This package, like the [Sails framework](http://sailsjs.com), is free and open-source under the [MIT License](http://sailsjs.com/license).

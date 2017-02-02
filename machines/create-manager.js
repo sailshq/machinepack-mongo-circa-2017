@@ -1,4 +1,4 @@
-var _ = require('lodash');
+var _ = require('@sailshq/lodash');
 var url = require('url');
 var util = require('util');
 var MongoClient = require('mongodb').MongoClient;

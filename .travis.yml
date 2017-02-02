@@ -1,18 +1,43 @@
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#   ╔╦╗╦═╗╔═╗╦  ╦╦╔═╗ ┬ ┬┌┬┐┬                           #
+#    ║ ╠╦╝╠═╣╚╗╔╝║╚═╗ └┬┘││││                           #
+#  o ╩ ╩╚═╩ ╩ ╚╝ ╩╚═╝o ┴ ┴ ┴┴─┘                         #
+#                                                       #
+# This file configures Travis CI.                       #
+# (i.e. how we run the tests... mainly)                 #
+#                                                       #
+# https://docs.travis-ci.com/user/customizing-the-build #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
 language: node_js
+
 node_js:
-  - "6"
-  - "5"
+  - "0.10"
+  - "0.12"
   - "4"
+  - "5"
+  - "6"
+  - "7"
+  - "node"
+
+branches:
+  only:
+    - master
+
 sudo: false
 services:
-  - mongodb
+  mongodb
 
 before-script:
-  - sleep 15
+  sleep 15
 
 addons:
   apt:
     sources:
-    - mongodb-3.2-precise
+      mongodb-3.2-precise
     packages:
-    - mongodb-org-server
+      mongodb-org-server
+
+notifications:
+  email:
+    - ci@sailsjs.com
