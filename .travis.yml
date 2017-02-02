@@ -24,6 +24,20 @@ branches:
   only:
     - master
 
+sudo: false
+services:
+  mongodb
+
+before-script:
+  sleep 15
+
+addons:
+  apt:
+    sources:
+      mongodb-3.2-precise
+    packages:
+      mongodb-org-server
+
 notifications:
   email:
     - ci@sailsjs.com
