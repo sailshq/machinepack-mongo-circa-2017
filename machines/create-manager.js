@@ -216,10 +216,6 @@ module.exports = {
       // > instance came from mp-mongo or not, for debugging reasons.)
       manager._isFromMPMongo = true;
 
-      // Also give the manager a `mongodb` property, so that it provides access
-      // to the static Mongo library for Node.js. (See http://npmjs.com/package/mongodb)
-      manager.mongodb = NodeMongoDBNativeLib;
-
       return exits.success({
         manager: manager,
         meta: inputs.meta
