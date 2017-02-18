@@ -1,6 +1,6 @@
-var _ = require('@sailshq/lodash');
 var url = require('url');
 var util = require('util');
+var _ = require('@sailshq/lodash');
 var MongoClient = require('mongodb').MongoClient;
 
 module.exports = {
@@ -9,56 +9,33 @@ module.exports = {
   friendlyName: 'Create manager',
 
 
-  description: 'Build and initialize a connection manager instance for this database.',
+  description: 'Build and initialize a connection manager instance (in Mongo, this is `db`).',
 
 
-  extendedDescription:
-  'The `manager` instance returned by this method contains any configuration that is necessary ' +
-  'for communicating with the database and establishing connections (e.g. host, user, password) ' +
-  'as well as any other relevant metadata. The manager will often also contain a reference ' +
-  'to some kind of native container (e.g. a connection pool).\n' +
-  '\n' +
-  'Note that a manager instance does not necessarily need to correspond with a pool though--' +
-  'it might simply be a container for storing config, or it might refer to multiple pools ' +
-  '(e.g. a ClusterPool from felixge\'s `mysql` package).',
+  moreInfoUrl: 'https://github.com/node-machine/driver-interface/blob/master/machines/create-manager.js',
 
 
   inputs: {
 
     connectionString: {
-      description: 'A string containing the/ primary configuration/credentials necessary for connecting to the database (almost always a URI).',
-      extendedDescription:
-        'If the database does not explicitly support a connection string, then careful, ' +
-        'step-by-step instructions for generating the appropriate connection string (such ' +
-        'as stringifying a JSON dictionary or using a particular string in conjunction with' +
-        'information in the `meta` input) should be included in the `whereToGet` of this ' +
-        'input definition. Driver implementors should use `extendedDescription` and/or ' +
-        '`moreInfoUrl` for explaining what the connection string means rather than focusing ' +
-        'on how to generate it (use `whereToGet` for that).',
+      description: 'The Mongo connection URL containing the configuration/credentials necessary for connecting to the database.',
+      moreInfoUrl: 'http://sailsjs.com/documentation/reference/configuration/sails-config-datastores#?the-connection-url',
       // example: 'mongodb://foo:bar@localhost:27017/thedatabase',
       example: '===',
       required: true
     },
 
     onUnexpectedFailure: {
-      description: 'A function to call any time an unexpected error event is received from this manager or any of its connections.',
-      extendedDescription:
-        'This can be used for anything you like, whether that\'s sending an email to devops, ' +
-        'or something as simple as logging a warning to the console.\n' +
-        '\n' +
-        'For example:\n' +
-        '```\n' +
-        'onUnexpectedFailure: function (err) {\n' +
-        '  console.warn(\'Unexpected failure in database manager:\',err);\n' +
-        '}\n' +
-        '```',
-      example: '->'
+      friendlyName: 'On unxpected failure (unused)',
+      description: 'A notifier function for otherwise-unhandled error events. (WARNING: Currently, this is ignored by mp-mongo!)',
+      moreInfoUrl: 'https://github.com/node-machine/driver-interface/blob/3f3a150ef4ece40dc0d105006e2766e81af23719/machines/create-manager.js#L37-L49',
+      // example: '->',
+      example: '==='
     },
 
     meta: {
-      friendlyName: 'Meta (custom)',
-      description: 'Additional stuff to pass to the driver.',
-      extendedDescription: 'This is reserved for custom driver-specific extensions. Please refer to the documentation for the driver you are using for more specific information.',
+      description: 'A dictionary of additional options to pass in when instantiating the Mongo client instance. (e.g. `{ssl: true}`)',
+      moreInfoUrl: 'https://github.com/node-machine/driver-interface/blob/3f3a150ef4ece40dc0d105006e2766e81af23719/constants/meta.input.js',
       example: '==='
     }
 
@@ -68,15 +45,9 @@ module.exports = {
   exits: {
 
     success: {
-      description: 'The manager was successfully created.',
-      extendedDescription:
-        'The new manager should be passed in to `getConnection()`.' +
-        'Note that _no matter what_, this manager must be capable of ' +
-        'spawning an infinite number of connections (i.e. via `getConnection()`). ' +
-        'The implementation of how exactly it does this varies on a driver-by-driver ' +
-        'basis; and it may also vary based on the configuration passed into the `meta` input.',
-      outputVariableName: 'report',
-      outputDescription: 'The `manager` property is a manager instance that will be passed into `getConnection()`. The `meta` property is reserved for custom driver-specific extensions.',
+      description: 'Connected to Mongo successfully.',
+      outputFriendlyName: 'Report',
+      outputDescription: 'The `manager` property is a Mongo client instance.  The `meta` property is unused.',
       // example: {
       //   manager: '===',
       //   meta: '==='
@@ -87,7 +58,7 @@ module.exports = {
     malformed: {
       description: 'The provided connection string is malformed.',
       extendedDescription: 'The format of connection strings varies across different databases and their drivers. This exit indicates that the provided string is not valid as per the custom rules of this driver. Note that if this exit is traversed, it means the driver DID NOT ATTEMPT to create a manager-- instead the invalid connection string was discovered during a check performed beforehand.',
-      outputVariableName: 'report',
+      outputFriendlyName: 'Report',
       outputDescription: 'The `error` property is a JavaScript Error instance explaining that (and preferably "why") the provided connection string is invalid. The `meta` property is reserved for custom driver-specific extensions.',
       example: {
         error: '===',
@@ -96,7 +67,7 @@ module.exports = {
     },
 
     failed: {
-      description: 'Could not create a connection manager for this database using the specified connection string.',
+      description: 'Could not connect to Mongo using the specified connection URL.',
       extendedDescription:
         'If this exit is called, it might mean any of the following:\n' +
         ' + the credentials encoded in the connection string are incorrect\n' +
@@ -112,7 +83,7 @@ module.exports = {
         'multiple connections immediately when the manager is created, then this exit will be called if any of ' +
         'those initial attempts fail. On the other hand, if the manager is designed to produce adhoc connections, ' +
         'any errors related to bad credentials, connectivity, etc. will not be caught until `getConnection()` is called.',
-      outputVariableName: 'report',
+      outputFriendlyName: 'Report',
       outputDescription: 'The `error` property is a JavaScript Error instance with more information and a stack trace. The `meta` property is reserved for custom driver-specific extensions.',
       example: {
         error: '===',
@@ -123,6 +94,7 @@ module.exports = {
   },
 
   fn: function createManager(inputs, exits) {
+
     // Note:
     // Support for different types of managers is database-specific, and is not
     // built into the Waterline driver spec-- however this type of configurability
