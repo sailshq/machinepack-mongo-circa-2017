@@ -1,7 +1,7 @@
 var url = require('url');
 var util = require('util');
 var _ = require('@sailshq/lodash');
-var MongoClient = require('mongodb').MongoClient;
+var NodeMongoDBNativeLib = require('mongodb');
 
 module.exports = {
 
@@ -197,25 +197,34 @@ module.exports = {
       });
     }
 
-    MongoClient.connect(connectionString, _clientConfig, function connectCb(err, db) {
+    NodeMongoDBNativeLib.MongoClient.connect(connectionString, _clientConfig, function connectCb(err, db) {
       if (err) {
         return exits.error(err);
       }
 
       // `db` will be our manager.
+      // (This variable is just for clarity.)
       var manager = db;
 
       // Now mutate this manager, giving it a telltale.
       //
       // > For more context/history, see:
       // > https://github.com/treelinehq/machinepack-mongo/issues/2#issuecomment-267517800
+      // >
+      // > (^^But that's not the real reason to include it -- we ended up solving it differently
+      // > anyway.  No, the real reason is so that there's a way to tell if a given Mongo client
+      // > instance came from mp-mongo or not, for debugging reasons.)
       manager._isFromMPMongo = true;
+
+      // Also give the manager a `mongodb` property, so that it provides access
+      // to the static Mongo library for Node.js. (See http://npmjs.com/package/mongodb)
+      manager.mongodb = NodeMongoDBNativeLib;
 
       return exits.success({
         manager: manager,
         meta: inputs.meta
       });
-    });
+    });//</ .connect() >
   }
 
 
