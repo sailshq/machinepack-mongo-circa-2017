@@ -38,8 +38,6 @@
       "create-manager",
       "destroy-manager",
       "get-connection",
-      "parse-native-query-error",
-      "parse-native-query-result",
       "release-connection"
     ],
     "implements": {
