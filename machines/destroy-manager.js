@@ -19,7 +19,6 @@ module.exports = {
   inputs: {
 
     manager: {
-      friendlyName: 'Manager',
       description: 'The connection manager instance to destroy.',
       extendedDescription: 'Only managers built using the `createManager()` method of this driver are supported.  Also, the database connection manager instance provided must not have been destroyed--i.e. once `destroyManager()` is called on a manager, it cannot be destroyed again (also note that all existing connections become inactive).',
       example: '===',
@@ -49,7 +48,6 @@ module.exports = {
     },
 
     failed: {
-      friendlyName: 'Failed',
       description: 'The provided connection manager (and/or any of its active connections) could not be destroyed.',
       extendedDescription:
         'Usually, this means the manager has already been destroyed.  But depending on the driver ' +
