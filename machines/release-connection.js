@@ -13,6 +13,9 @@ module.exports = {
   extendedDescription: 'Depending on the implementation of this driver, this might release the connection back into the pool or close it entirely.  Regardless, if the provided connection has a transaction started, be sure to end the transaction by either committing it or rolling it back before releasing the connection.',
 
 
+  sync: true,
+
+
   inputs: {
 
     connection: {
@@ -61,7 +64,7 @@ module.exports = {
   },
 
 
-  fn: function releaseConnection(inputs, exits) {
+  fn: function (inputs, exits) {
 
     // If the connection doesn't have a `close` function for some reason,
     // then catch that ahead of time so we can provide a slightly nicer
