@@ -93,7 +93,7 @@ module.exports = {
 
   },
 
-  fn: function createManager(inputs, exits) {
+  fn: function (inputs, exits) {
 
     // Note:
     // Support for different types of managers is database-specific, and is not
