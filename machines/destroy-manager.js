@@ -13,6 +13,9 @@ module.exports = {
   extendedDescription: 'This may involve destroying a pool and its connections, destroying multiple pools and their connections, doing nothing at all (if this manager just does ad-hoc connections), or something even more exotic.  The implementation is left up to the driver.',
 
 
+  sync: true,
+
+
   inputs: {
 
     manager: {
@@ -63,7 +66,7 @@ module.exports = {
   },
 
 
-  fn: function destroyManager(inputs, exits) {
+  fn: function (inputs, exits) {
 
     // If the manager doesn't have a `close` function for some reason,
     // then catch that ahead of time so we can provide a slightly nicer
