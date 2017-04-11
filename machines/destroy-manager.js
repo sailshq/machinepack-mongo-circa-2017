@@ -19,7 +19,6 @@ module.exports = {
   inputs: {
 
     manager: {
-      friendlyName: 'Manager',
       description: 'The connection manager instance to destroy.',
       extendedDescription: 'Only managers built using the `createManager()` method of this driver are supported.  Also, the database connection manager instance provided must not have been destroyed--i.e. once `destroyManager()` is called on a manager, it cannot be destroyed again (also note that all existing connections become inactive).',
       example: '===',
@@ -40,24 +39,23 @@ module.exports = {
 
     success: {
       description: 'The specified manager and all of its active connections were successfully destroyed.',
-      outputVariableName: 'report',
+      outputFriendlyName: 'Report',
       outputDescription: 'The `meta` property is reserved for custom driver-specific extensions.',
-      // example: {
+      // outputExample: {
       //   meta: '==='
       // }
-      example: '==='
+      outputExample: '==='
     },
 
     failed: {
-      friendlyName: 'Failed',
       description: 'The provided connection manager (and/or any of its active connections) could not be destroyed.',
       extendedDescription:
         'Usually, this means the manager has already been destroyed.  But depending on the driver ' +
         'it could also mean that database cannot be accessed.  In production, this can mean that the database ' +
         'server(s) became overwhelemed or were shut off while some business logic was in progress.',
-      outputVariableName: 'report',
+      outputFriendlyName: 'Report',
       outputDescription: 'The `error` property is a JavaScript Error instance with more information and a stack trace.  The `meta` property is reserved for custom driver-specific extensions.',
-      example: {
+      outputExample: {
         error: '===',
         meta: '==='
       }

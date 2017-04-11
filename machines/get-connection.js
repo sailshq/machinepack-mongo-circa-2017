@@ -35,18 +35,18 @@ module.exports = {
     success: {
       outputFriendlyName: 'Report',
       outputDescription: 'The `connection` property is a Mongo client instance. The `meta` property is unused.',
-      // example: {
+      // outputExample: {
       //   connection: '===',
       //   meta: '==='
       // }
-      example: '==='
+      outputExample: '==='
     },
 
     failed: {
       friendlyName: 'Failed (unused)',
       description: 'Could not acquire a connection to the database via the provided connection manager. (WARNING: Currently, this is ignored by mp-mongo!)',
       outputFriendlyName: 'Report',
-      example: {
+      outputExample: {
         error: '===',
         meta: '==='
       }

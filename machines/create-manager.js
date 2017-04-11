@@ -34,6 +34,7 @@ module.exports = {
     },
 
     meta: {
+      friendlyName: 'Meta (custom)',
       description: 'A dictionary of additional options to pass in when instantiating the Mongo client instance. (e.g. `{ssl: true}`)',
       moreInfoUrl: 'https://github.com/node-machine/driver-interface/blob/3f3a150ef4ece40dc0d105006e2766e81af23719/constants/meta.input.js',
       example: '==='
@@ -48,11 +49,11 @@ module.exports = {
       description: 'Connected to Mongo successfully.',
       outputFriendlyName: 'Report',
       outputDescription: 'The `manager` property is a Mongo client instance.  The `meta` property is unused.',
-      // example: {
+      // outputExample: {
       //   manager: '===',
       //   meta: '==='
       // }
-      example: '==='
+      outputExample: '==='
     },
 
     malformed: {
@@ -60,7 +61,7 @@ module.exports = {
       extendedDescription: 'The format of connection strings varies across different databases and their drivers. This exit indicates that the provided string is not valid as per the custom rules of this driver. Note that if this exit is traversed, it means the driver DID NOT ATTEMPT to create a manager-- instead the invalid connection string was discovered during a check performed beforehand.',
       outputFriendlyName: 'Report',
       outputDescription: 'The `error` property is a JavaScript Error instance explaining that (and preferably "why") the provided connection string is invalid. The `meta` property is reserved for custom driver-specific extensions.',
-      example: {
+      outputExample: {
         error: '===',
         meta: '==='
       }
@@ -85,7 +86,7 @@ module.exports = {
         'any errors related to bad credentials, connectivity, etc. will not be caught until `getConnection()` is called.',
       outputFriendlyName: 'Report',
       outputDescription: 'The `error` property is a JavaScript Error instance with more information and a stack trace. The `meta` property is reserved for custom driver-specific extensions.',
-      example: {
+      outputExample: {
         error: '===',
         meta: '==='
       }

@@ -19,7 +19,6 @@ module.exports = {
   inputs: {
 
     connection: {
-      friendlyName: 'Connection',
       description: 'An active database connection.',
       extendedDescription: 'The provided database connection instance must still be active.  Only database connection instances created by the `getConnection()` machine in this driver are supported.',
       example: '===',
@@ -41,24 +40,23 @@ module.exports = {
     success: {
       description: 'The connection was released and is no longer active.',
       extendedDescription: 'The provided connection may no longer be used for any subsequent queries.',
-      outputVariableName: 'report',
+      outputFriendlyName: 'Report',
       outputDescription: 'The `meta` property is reserved for custom driver-specific extensions.',
-      // example: {
+      // outputExample: {
       //   meta: '==='
       // }
-      example: '==='
+      outputExample: '==='
     },
 
     badConnection: {
-      friendlyName: 'Bad connection',
       description: 'The provided connection is no longer active; or possibly never was.',
       extendedDescription: 'Usually, this means the connection to the database was lost due to a logic error or timing issue in userland code.  In production, this can mean that the database became overwhelemed or was shut off while some business logic was in progress.',
-      outputVariableName: 'report',
+      outputFriendlyName: 'Report',
       outputDescription: 'The `meta` property is reserved for custom driver-specific extensions.',
-      // example: {
+      // outputExample: {
       //   meta: '==='
       // }
-      example: '==='
+      outputExample: '==='
     }
 
   },
